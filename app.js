@@ -1,9 +1,13 @@
 // app.js
 import express from 'express';
 import { recommendBooks } from './BookRecomendationEngine.js';
-import { BookList } from './models/BookList.js';
-import { userPreferences } from './models/UserPreference.js';
 import cors from 'cors';
+import { fetchBookList, saveBookList } from './services/BookListService.js';
+import dotenv from 'dotenv';
+import { fetchUserPreference, saveUserPreference } from './services/UserPreferenceService.js';
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Creating express object
 const app = express();
@@ -14,11 +18,11 @@ app.use(express.json());
 app.use(cors());
  
 // Handling GET request
-app.post('/suggest-books', (req, res) => {
+app.post('/suggest-books', async (req, res) => {
     const { bookChoosingMethod, genrePreferences, readingPace } = req.body;
-    const up = userPreferences;
 
-    // Implement your book suggestion logic based on userPreferences
+    const [BookList, up] = await Promise.all([fetchBookList(), fetchUserPreference()]);
+    
     const suggestedBooks = recommendBooks(BookList, up, bookChoosingMethod, genrePreferences, readingPace);
 
     res.json({ suggestedBooks });

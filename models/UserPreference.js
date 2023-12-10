@@ -1,5 +1,5 @@
 // userPreferences.js
-export const userPreferences = {
+export const userPreference = {
     authorReputation: [8, 7, 9],
     bookReviews: [7, 8, 6],
     randomPicking: [6, 5, 7],
